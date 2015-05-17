@@ -1,4 +1,3 @@
 #!/usr/bin/env sh
 
-mkdir -p $3/.mix
 echo "MIX_ARCHIVES=$3/.mix"
