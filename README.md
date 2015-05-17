@@ -1,4 +1,4 @@
-# asdf-erlang
+# asdf-elixir
 
 elixir package source for [asdf](https://github.com/HashNuke/asdf) version manager
 
