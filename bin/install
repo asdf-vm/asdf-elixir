@@ -1,0 +1,72 @@
+#!/usr/bin/env sh
+
+install_erlang() {
+  local install_type=$1
+  local version=$2
+  local install_path=$3
+  local download_file_path=$(get_download_file_path $install_type $version)
+
+  download_source_file $install_type $version
+
+  # running this in a subshell
+  # we don't want to disturb current working dir
+  (
+    if [ "$install_type" != "version" ]; then
+      tar zxf $download_file_path -C $install_path --strip-components=1 || exit 1
+      cd $install_path
+      make clean test
+
+      if [ $? -ne 0 ]; then
+        rm -rf $install_path
+        exit 1
+      fi
+    else
+      if type "unzip" &> /dev/null; then
+        unzip -q $download_file_path -d $install_path
+      else
+        echo "ERROR: unzip not found"
+        exit 1
+      fi
+    fi
+    mkdir -p $install_path/.mix
+  )
+}
+
+
+download_source_file() {
+  local install_type=$1
+  local version=$2
+  local download_path=$(get_download_file_path $install_type $version)
+  local download_url=$(get_download_url $install_type $version)
+
+  curl -Lo $download_path -C - $download_url
+}
+
+
+get_download_file_path() {
+  local install_type=$1
+  local version=$2
+  if [ "$install_type" = "version" ]; then
+    local pkg_name="elixir-precompiled-${version}.zip"
+  else
+    local pkg_name="elixir-${install_type}-${version}-src.tar.gz"
+  fi
+
+  echo "$TMPDIR$pkg_name"
+}
+
+
+get_download_url() {
+  local install_type=$1
+  local version=$2
+
+  if [ "$install_type" = "version" ]
+  then
+    echo "https://github.com/elixir-lang/elixir/releases/download/v${version}/Precompiled.zip"
+  else
+    echo "https://github.com/elixir-lang/elixir/archive/${version}.tar.gz"
+  fi
+}
+
+
+install_elixir $@
