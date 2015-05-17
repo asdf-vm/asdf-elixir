@@ -1,10 +1,10 @@
 # asdf-elixir
 
-elixir package source for [asdf](https://github.com/HashNuke/asdf) version manager
+Elixir tool source for [asdf](https://github.com/HashNuke/asdf) version manager
 
 ## Install
 
-> *Elixir requires Erlang to be installed. You can use the [asdf-erlang](https://github.com/HashNuke/asdf-erlang) package source to install Erlang versions.*
+> *Elixir requires Erlang to be installed. You can use the [asdf-erlang](https://github.com/HashNuke/asdf-erlang) tool source to install Erlang versions.*
 
 ```
 asdf source-add elixir https://github.com/HashNuke/asdf-elixir.git
