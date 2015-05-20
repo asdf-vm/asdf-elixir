@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 if [ "$MIX_ARCHIVES" = "" ]; then
-  echo "MIX_ARCHIVES=$3/.mix"
+  export MIX_ARCHIVES=$3/.mix
 fi
 
