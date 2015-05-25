@@ -13,7 +13,8 @@ install_elixir() {
 
   # path to the tar file
   local source_path=$(get_download_file_path $install_type $version $tmp_download_dir)
-  download_source $install_type $version $source_path
+  echo $source_path
+  download_source_file $install_type $version $source_path
 
   # running this in a subshell
   # we don't want to disturb current working dir
@@ -61,7 +62,7 @@ get_download_file_path() {
     local pkg_name="elixir-${install_type}-${version}-src.tar.gz"
   fi
 
-  echo "$tmp_download_dir/$dir_name"
+  echo "$tmp_download_dir/$pkg_name"
 }
 
 
