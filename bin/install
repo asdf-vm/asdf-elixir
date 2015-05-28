@@ -36,7 +36,7 @@ install_elixir() {
         exit 1
       fi
     fi
-    mkdir -p $install_path/.mix
+    mkdir -p $install_path/.mix/archives
   )
 }
 
