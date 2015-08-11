@@ -29,13 +29,14 @@ install_elixir() {
         exit 1
       fi
     else
-      if type "unzip" &> /dev/null; then
-        unzip -q $source_path -d $install_path
-      else
+      if ! type "unzip" &> /dev/null; then
         echo "ERROR: unzip not found"
         exit 1
       fi
+
+      unzip -q $source_path -d $install_path || exit 1
     fi
+
     mkdir -p $install_path/.mix/archives
   )
 }
