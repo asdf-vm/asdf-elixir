@@ -48,6 +48,24 @@ download_source_file() {
   local download_path=$3
   local download_url=$(get_download_url $install_type $version)
 
+  # determine if the file exists
+  http_status=$(curl -w %{http_code} -s -o /dev/null $download_url)
+
+  if [ $http_status -eq 404 ]; then
+    echo -e "\nUnable to download Elixir, Github returned a status code of 404"
+    echo -e "URL: ${download_url}\n\n"
+    echo "View all Elixir releases at:"
+    echo -e "\thttps://github.com/elixir-lang/elixir/releases\n"
+
+    if [ "$install_type" = "version" ]; then
+      echo "Note: The Elixir version must start with a v (example: v1.1.1)"
+    else
+      echo "Note: The Elixir version must not start with a v (example: 1.1.1)"
+    fi
+
+    exit 1 # non zero due to file not existing
+  fi
+
   curl -Lo $download_path -C - $download_url
 }
 
