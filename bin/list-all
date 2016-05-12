@@ -1,24 +1,6 @@
 #!/usr/bin/env bash
 
-versions_list=(
-  1.0.0
-  1.0.1
-  1.0.2
-  1.0.4
-  1.0.5
-  1.1.0
-  1.1.1
-  1.2.0
-  1.2.1
-  1.2.2
-  1.2.3
-)
-
-versions=""
-
-for version in "${versions_list[@]}"
-do
-  versions="${versions} ${version}"
-done
-
+releases_path=https://api.github.com/repos/elixir-lang/elixir/releases
+# Fetch all tag names, and get only second column. Then remove all unnecesary characters.
+versions=$(curl -s $releases_path | grep "tag_name" | cut -d':' -f2 | sed -e 's/["v,]//g' | tr '\n' ' ')
 echo $versions
