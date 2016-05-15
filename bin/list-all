@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 
 releases_path=https://api.github.com/repos/elixir-lang/elixir/releases
+branches_path=https://api.github.com/repos/elixir-lang/elixir/branches
 # Fetch all tag names, and get only second column. Then remove all unnecesary characters.
-versions=$(curl -s $releases_path | grep "tag_name" | grep -oE '[0-9](\.[0-9]){2}' | tr '\n' ' ')
-echo $versions
+
+releases=$(curl -qs $releases_path | tr ',' '\n' | grep '"tag_name":')
+releases=${releases//\"tag_name\":/}
+releases=${releases//[\",]/}
+releases=${releases//v/}
+
+branches=$(curl -qs $branches_path | tr ',' '\n' | grep '"name":')
+branches=${branches//\"name\":/}
+branches=${branches//[\",]/}
+
+echo -e "Elixir\treleases:\v"$releases" \vElixir\tbranches:\v"$branches
