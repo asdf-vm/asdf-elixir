@@ -6,7 +6,7 @@ install_elixir() {
   local install_path=$3
 
   if [ "$TMPDIR" = "" ]; then
-    local tmp_download_dir=$(mktemp -d elixir_build_XXXXXX)
+    local tmp_download_dir=$(mktemp -d)
   else
     local tmp_download_dir=$TMPDIR
   fi
