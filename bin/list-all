@@ -3,7 +3,7 @@
 releases_path=https://api.github.com/repos/elixir-lang/elixir/releases
 cmd="curl -s"
 if [ -n "$OAUTH_TOKEN" ]; then
-  cmd="$cmd -H Authorization: token $OAUTH_TOKEN"
+  cmd="$cmd -H 'Authorization: token $OAUTH_TOKEN'"
 fi
 cmd="$cmd $releases_path"
 
