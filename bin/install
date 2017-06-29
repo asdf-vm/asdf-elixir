@@ -73,12 +73,12 @@ get_download_url() {
 
   if [ "$install_type" = "version" ]
   then
-    if [[ "$version" =~ *"-otp-"* ]] ; then
-       local otp=$(echo $version | sed -e 's/.*-otp-//')
-       version=$(echo $version | sed -e 's/-otp-.*//')
-       echo "https://repo.hex.pm/builds/elixir/v{version}-otp-{otp}.zip"
-    else
+    if [[ "$version" =~ ^[0-9]+\.* ]] ; then
+       # if version is a release number, prepend v
        echo "https://repo.hex.pm/builds/elixir/v${version}.zip"
+    else
+       # otherwise it can be a branch name or commit sha
+       echo "https://repo.hex.pm/builds/elixir/${version}.zip"
     fi
   else
     echo "https://github.com/elixir-lang/elixir/archive/${version}.tar.gz"
