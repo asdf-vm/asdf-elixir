@@ -26,7 +26,7 @@ So, for example, to install Elixir 1.5.0-rc.0 and take advantage of the new feat
 asdf install elixir 1.5.0-rc.0-otp-20
 ```
 
-Be sure to also install the coresponding Erlang VM version with asdf-erlang, and to specify both matching versions in
+Be sure to also install the correspoding Erlang VM version with asdf-erlang, and to specify both matching versions in
 your `.tool-versions` file.
 
 ## Use
