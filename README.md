@@ -26,6 +26,14 @@ So, for example, to install Elixir 1.5.0-rc.0 and take advantage of the new feat
 Be sure to also install the correspoding Erlang/OTP version with asdf-erlang, and to have both selected versions in your
 `.tool-versions` file.
 
+
+## Elixir escripts support
+
+This plugin supports elixir escripts adding them to your path just like any other elixir binary.
+Whenever you install a new escript with `mix escript.install` you need to `asdf reshim elixir` in order
+to create shims for it.
+
+
 ## Use
 
 Check [asdf](https://github.com/asdf-vm/asdf) readme for instructions on how to install & manage versions of Elixir.
