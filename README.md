@@ -21,7 +21,7 @@ supported by that version.
 
 If you would like to use precompiled binaries built with a more recent OTP, you can append `-otp-${OTP_VERSION}` to any installable version that can be given to asdf-elixir.
 
-So, for example, to install Elixir 1.5.0-rc.0 and take advantage of the new features from OTP-20 you might install version `1.5.0-rc.0-otp-20`.
+So, for example, to install Elixir 1.5.0 and take advantage of the new features from OTP-20 you might install version `1.5.0-otp-20`.
 
 Be sure to also install the correspoding Erlang/OTP version with asdf-erlang, and to have both selected versions in your
 `.tool-versions` file.
