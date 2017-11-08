@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-if [ "$MIX_ARCHIVES" = "" ]; then
+if [ "$MIX_ARCHIVES" = "" ] && [ "$ASDF_INSTALL_VERSION" != "system" ]; then
   export MIX_ARCHIVES=$ASDF_INSTALL_PATH/.mix/archives
 fi
 
-if [ "$MIX_HOME" = "" ]; then
+if [ "$MIX_HOME" = "" ] && [ "$ASDF_INSTALL_VERSION" != "system" ]; then
   export MIX_HOME=$ASDF_INSTALL_PATH/.mix
 fi
 
