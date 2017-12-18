@@ -26,6 +26,9 @@ So, for example, to install Elixir 1.5.0 and take advantage of the new features 
 Be sure to also install the correspoding Erlang/OTP version with asdf-erlang, and to have both selected versions in your
 `.tool-versions` file.
 
+## Compiling from a git reference
+
+You can compile your own elixir from a commit reference from the [elixir github repository](https://github.com/elixir-lang/elixir/commits/master), by specifying the version to install as `ref-<commit reference>`.
 
 ## Elixir escripts support
 
