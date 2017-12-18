@@ -28,7 +28,21 @@ Be sure to also install the correspoding Erlang/OTP version with asdf-erlang, an
 
 ## Compiling from a git reference
 
-You can compile your own elixir from a commit reference from the [elixir github repository](https://github.com/elixir-lang/elixir/commits/master), by specifying the version to install as `ref-<commit reference>`.
+You can compile your own elixir from a commit reference from the [elixir github repository](https://github.com/elixir-lang/elixir/commits/master).
+
+### .tool-versions file
+
+You can specify the version to install with a line like so in your `.tool-versions` file:
+
+```
+elixir ref-<commit reference>
+```
+
+### Using the CLI
+
+You can install the version using: `asdf install elixir ref:<commit reference>`.
+
+You can then set the local/global version to your new version with `asdf local elixir ref-<commit reference>` or `asdf global elixir ref-<commit reference>`.
 
 ## Elixir escripts support
 
