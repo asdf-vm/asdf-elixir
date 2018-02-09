@@ -19,7 +19,7 @@ These precompiled packages are built against every officially supported OTP vers
 elixir version, like `1.4.5`, the downloaded binaries will be those compiled against the oldest OTP release
 supported by that version.
 
-If you would like to use precompiled binaries built with a more recent OTP, you can append `-otp-${OTP_VERSION}` to any installable version that can be given to asdf-elixir.
+If you would like to use precompiled binaries built with a more recent OTP, you can append `-otp-${OTP_MAJOR_VERSION}` to any installable version that can be given to asdf-elixir.
 
 So, for example, to install Elixir 1.5.0 and take advantage of the new features from OTP-20 you might install version `1.5.0-otp-20`.
 
