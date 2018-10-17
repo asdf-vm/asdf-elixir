@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-releases_path=https://api.github.com/repos/elixir-lang/elixir/releases
+releases_path=https://api.github.com/repos/elixir-lang/elixir/releases?per_page=100
 cmd="curl -s"
 if [ -n "$OAUTH_TOKEN" ]; then
   cmd="$cmd -H 'Authorization: token $OAUTH_TOKEN'"

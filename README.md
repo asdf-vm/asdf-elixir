@@ -19,13 +19,30 @@ These precompiled packages are built against every officially supported OTP vers
 elixir version, like `1.4.5`, the downloaded binaries will be those compiled against the oldest OTP release
 supported by that version.
 
-If you would like to use precompiled binaries built with a more recent OTP, you can append `-otp-${OTP_VERSION}` to any installable version that can be given to asdf-elixir.
+If you would like to use precompiled binaries built with a more recent OTP, you can append `-otp-${OTP_MAJOR_VERSION}` to any installable version that can be given to asdf-elixir.
 
 So, for example, to install Elixir 1.5.0 and take advantage of the new features from OTP-20 you might install version `1.5.0-otp-20`.
 
 Be sure to also install the correspoding Erlang/OTP version with asdf-erlang, and to have both selected versions in your
 `.tool-versions` file.
 
+## Compiling from a git reference
+
+You can compile your own elixir from a commit reference from the [elixir github repository](https://github.com/elixir-lang/elixir/commits/master).
+
+### .tool-versions file
+
+You can specify the version to install with a line like so in your `.tool-versions` file:
+
+```
+elixir ref-<commit reference>
+```
+
+### Using the CLI
+
+You can install the version using: `asdf install elixir ref:<commit reference>`.
+
+You can then set the local/global version to your new version with `asdf local elixir ref-<commit reference>` or `asdf global elixir ref-<commit reference>`.
 
 ## Elixir escripts support
 
