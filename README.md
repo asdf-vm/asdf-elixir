@@ -23,7 +23,7 @@ If you would like to use precompiled binaries built with a more recent OTP, you 
 
 So, for example, to install Elixir 1.5.0 and take advantage of the new features from OTP-20 you might install version `1.5.0-otp-20`.
 
-Be sure to also install the correspoding Erlang/OTP version with asdf-erlang, and to have both selected versions in your
+Be sure to also install the corresponding Erlang/OTP version with asdf-erlang, and to have both selected versions in your
 `.tool-versions` file.
 
 ## Compiling from a git reference
