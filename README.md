@@ -4,6 +4,11 @@ Elixir plugin for [asdf](https://github.com/asdf-vm/asdf) version manager
 
 ## Install
 
+This plugin needs `unzip` to be installed.
+
+If you have a Debian system you can install it by typing:
+`sudo apt-get install unzip`
+
 > *Elixir requires Erlang to be installed. You can use the [asdf-erlang](https://github.com/asdf-vm/asdf-erlang) plugin to install Erlang versions.*
 
 ```
