@@ -18,9 +18,9 @@ asdf plugin-add elixir https://github.com/asdf-vm/asdf-elixir.git
 ## Elixir precompiled versions
 
 Precompiled Elixir packages are built by [Bob](https://github.com/hexpm/bob/blob/master/README.md#elixir-builds) whenever
-a git push or a new release is made at the elixir repo.
+a git push or a new release is made at the elixir repo. There's also a [status page](https://bobs-list.kobrakai.de/) available with an overview of all available packages and their availability.
 
-These precompiled packages are built against every officially supported OTP version, however if you only specify the
+The precompiled packages are built against every officially supported OTP version, however if you only specify the
 elixir version, like `1.4.5`, the downloaded binaries will be those compiled against the oldest OTP release
 supported by that version.
 
