@@ -31,9 +31,22 @@ So, for example, to install Elixir 1.5.0 and take advantage of the new features 
 Be sure to also install the corresponding Erlang/OTP version with asdf-erlang, and to have both selected versions in your
 `.tool-versions` file.
 
-## Compiling from a git reference
+## Compiling from a git reference or source
 
-You can compile your own elixir from a commit reference from the [elixir github repository](https://github.com/elixir-lang/elixir/commits/master).
+You can download and compile elixir as of a specific commit reference from the [elixir github repository](https://github.com/elixir-lang/elixir/commits/master). For example:
+
+```
+asdf install elixir ref:161f5f9a3b6bc38faa152e08c567486b71b0602a
+```
+
+You can also [compile elixir from source](https://github.com/elixir-lang/elixir/tree/master#compiling-from-source) without using `asdf` (for example, so that you can use the `master` branch of elixir or a branch with your own modifications), then symlink and use it as a named version:
+
+```
+ln -s /path/to/elixir ~/.asdf/installs/elixir/master
+asdf reshim elixir master
+```
+
+This version of Elixir will always reflect the most recently compiled version in the specified folder.
 
 ### .tool-versions file
 
@@ -41,6 +54,12 @@ You can specify the version to install with a line like so in your `.tool-versio
 
 ```
 elixir ref-<commit reference>
+```
+
+or
+
+```
+elixir master
 ```
 
 ### Using the CLI
