@@ -31,23 +31,41 @@ So, for example, to install Elixir 1.5.0 and take advantage of the new features 
 Be sure to also install the corresponding Erlang/OTP version with asdf-erlang, and to have both selected versions in your
 `.tool-versions` file.
 
-## Compiling from a git reference
+## Compiling from a Git reference or from source
 
-You can compile your own elixir from a commit reference from the [elixir github repository](https://github.com/elixir-lang/elixir/commits/master).
+### Using the CLI
+
+You can download and compile a specific commit reference from the [Elixir GitHub repository](https://github.com/elixir-lang/elixir/commits/master) by running: `asdf install elixir ref:<commit reference>`. You can then set the local/global version to your new version by running:
+
+```
+asdf local elixir ref:<commit reference>
+# Or
+asdf global elixir ref:<commit reference>
+```
+
+You can also [compile Elixir from source](https://github.com/elixir-lang/elixir/tree/master#compiling-from-source) without using `asdf` (for example, so that you can use the `master` branch of elixir or a branch with your own modifications), then use it by specifying the path:
+
+```
+# After Elixir already installed into /path/to/elixir
+asdf local elixir path:/path/to/elixir
+# Or
+asdf global elixir path:/path/to/elixir
+```
+
 
 ### .tool-versions file
 
 You can specify the version to install with a line like so in your `.tool-versions` file:
 
 ```
-elixir ref-<commit reference>
+elixir ref:<commit reference>
 ```
 
-### Using the CLI
+Or if you've already compiled Elixir from source in a specific directory:
 
-You can install the version using: `asdf install elixir ref:<commit reference>`.
-
-You can then set the local/global version to your new version with `asdf local elixir ref-<commit reference>` or `asdf global elixir ref-<commit reference>`.
+```
+elixir path:/path/to/elixir
+```
 
 ## Elixir escripts support
 
