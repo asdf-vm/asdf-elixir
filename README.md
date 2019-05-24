@@ -31,6 +31,8 @@ So, for example, to install Elixir 1.5.0 and take advantage of the new features 
 Be sure to also install the corresponding Erlang/OTP version with asdf-erlang, and to have both selected versions in your
 `.tool-versions` file.
 
+> **Note**: You do not need to have Erlang installed to install a precompiled version of Elixir installed, but you will need to have it available at runtime, otherwise your Elixir commands will fail. Even though it's possible to install Elixir first, it's recommended to install Erlang first.
+
 ## Compiling from a Git reference or from source
 
 ### Using the CLI
