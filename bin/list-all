@@ -15,4 +15,15 @@ function sort_versions() {
 
 # Fetch all tag names, and get only second column. Then remove all unnecesary characters.
 versions=$(eval $cmd | grep -oE "tag_name\": \".{1,15}\"," | sed 's/tag_name\": \"v//;s/\",//' | sort_versions)
-echo $versions
+
+# ----------------------------------
+# Listing releases from http://hex.pm which `asdf` can install from.
+# ----------------------------------
+
+hex_releases_path=https://repo.hex.pm/builds/elixir/builds.txt
+hex_cmd="curl -s $hex_releases_path"
+
+hex_versions=$(eval $hex_cmd | awk '{split($0,row); print row[1]}' | sed 's/v//g' | sort_versions)
+# hex_versions=$(eval $hex_cmd | sed 's/^v*\([^ ]\) .+$/\1/g' | sort_versions)
+full_list="$versions # Hex versions: $hex_versions"
+echo $full_list
