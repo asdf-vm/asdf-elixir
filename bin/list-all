@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 
-releases_path=https://api.github.com/repos/elixir-lang/elixir/releases?per_page=100
-cmd="curl -s"
-if [ -n "$OAUTH_TOKEN" ]; then
-  cmd="$cmd -H 'Authorization: token $OAUTH_TOKEN'"
-fi
-cmd="$cmd $releases_path"
+releases_path="https://repo.hex.pm/builds/elixir/builds.txt"
+cmd="curl -s $releases_path"
 
 # stolen from https://github.com/rbenv/ruby-build/pull/631/files#diff-fdcfb8a18714b33b07529b7d02b54f1dR942
+# and adapted
 function sort_versions() {
-  sed 'h; s/[+-]/./g; s/.p\([[:digit:]]\)/.z\1/; s/$/.z/; G; s/\n/ /' | \
+  sed 'h; s/.p\([[:digit:]]\)/.z\1/; G; s/\n/ /' | \
     LC_ALL=C sort -t. -k 1,1 -k 2,2n -k 3,3n -k 4,4n -k 5,5n | awk '{print $2}'
 }
 
-# Fetch all tag names, and get only second column. Then remove all unnecesary characters.
-versions=$(eval $cmd | grep -oE "tag_name\": \".{1,15}\"," | sed 's/tag_name\": \"v//;s/\",//' | sort_versions)
+# Fetch all built versions,
+# get only first column,
+# remove all major.minor versions leaving only major.minor.patch versions,
+# remove the v prefix, eg v1.0.0 -> 1.0.0
+# sort the versions
+versions=$(eval $cmd | cut -d\  -f1 | awk -F'.' 'NF!=2' | sed 's/v//;s/\",//' | sort_versions)
 echo $versions
