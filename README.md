@@ -15,6 +15,10 @@ If you have a Debian system you can install it by typing:
 asdf plugin-add elixir https://github.com/asdf-vm/asdf-elixir.git
 ```
 
+## Check compatability elixir and erlang:
+
+https://hexdocs.pm/elixir/master/compatibility-and-deprecations.html#compatibility-between-elixir-and-erlang-otp
+
 ## Elixir precompiled versions
 
 Precompiled Elixir packages are built by [Bob](https://github.com/hexpm/bob/blob/master/README.md#elixir-builds) whenever
@@ -79,3 +83,7 @@ to create shims for it.
 ## Use
 
 Check [asdf](https://github.com/asdf-vm/asdf) readme for instructions on how to install & manage versions of Elixir.
+
+## Helpful Articles:
+
+https://www.cogini.com/blog/using-asdf-with-elixir-and-phoenix/
