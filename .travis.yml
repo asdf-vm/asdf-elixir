@@ -1,4 +1,6 @@
 language: erlang
+otp_release:
+  - 22.1.5
 script: asdf plugin-test elixir https://github.com/asdf-vm/asdf-elixir.git 'elixir --version'
 before_script:
   - git clone https://github.com/asdf-vm/asdf.git
