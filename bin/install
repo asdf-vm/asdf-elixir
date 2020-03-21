@@ -61,12 +61,11 @@ download_source_file() {
   if [ $http_status -eq 404 ]; then
     echo -e """==> Elixir version not found.
 
-GitHub returned a 404 for the following URL:
+Release server returned a 404 for the following URL:
 
 ${download_url}
 
-You can view a list of all Elixir releases by running 'asdf list-all elixir'
-or by visiting https://github.com/elixir-lang/elixir/releases
+You can view a list of all Elixir releases by running 'asdf list-all elixir'.
 """
 
     if [ "$install_type" = "version" ]; then
