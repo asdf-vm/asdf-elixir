@@ -131,13 +131,12 @@ EOS
 get_download_url_for_version() {
   local version=$1
 
-  if [[ "$version" =~ ^[0-9]+\.* ]] ; then
-     # if version is a release number, prepend v
-     echo "https://repo.hex.pm/builds/elixir/v${version}.zip"
-  else
-     # otherwise it can be a branch name or commit sha
-     echo "https://repo.hex.pm/builds/elixir/${version}.zip"
+  # if version is a release number, prepend v
+  if [[ "$version" =~ ^[0-9]+\.* ]]; then
+    version="v${version}"
   fi
+
+  echo "https://repo.hex.pm/builds/elixir/${version}.zip"
 }
 
 
