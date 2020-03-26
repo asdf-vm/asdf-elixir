@@ -30,7 +30,7 @@ install_elixir_version() {
 
   # path to the tar file
   local source_path="$tmp_download_dir/elixir-precompiled-${version}.zip"
-  download_source_file_for_version $version $source_path
+  download_zip_file_for_version $version $source_path
 
   echo "==> Copying release into place"
 
@@ -50,7 +50,7 @@ install_elixir_ref() {
 
   # path to the tar file
   local source_path="$tmp_download_dir/elixir-ref-${version}-src.tar.gz"
-  download_source_file_for_ref $ref $source_path
+  download_source_archive_for_ref $ref $source_path
 
   echo "==> Making the release"
 
@@ -65,7 +65,7 @@ install_elixir_ref() {
 }
 
 
-download_source_file_for_version() {
+download_zip_file_for_version() {
   local version=$1
   local download_path=$2
   local download_url=$(get_download_url_for_version $version)
@@ -96,7 +96,7 @@ EOS
 }
 
 
-download_source_file_for_ref() {
+download_source_archive_for_ref() {
   local ref=$1
   local download_path=$2
   local download_url="https://github.com/elixir-lang/elixir/archive/${ref}.tar.gz"
