@@ -11,12 +11,10 @@ install_elixir() {
     local tmp_download_dir=$TMPDIR
   fi
 
-  # running install commands in a subshell
-  # we don't want to disturb current working dir
   if [ "$install_type" = "version" ]; then
-    (install_elixir_version $version $install_path $tmp_download_dir)
+    install_elixir_version $version $install_path $tmp_download_dir
   else
-    (install_elixir_ref $version $install_path $tmp_download_dir)
+    install_elixir_ref $version $install_path $tmp_download_dir
   fi
 
   mkdir -p $install_path/.mix/archives
@@ -54,9 +52,12 @@ install_elixir_ref() {
 
   echo "==> Making the release"
 
+  # Expand source archive
   tar zxf $source_path -C $install_path --strip-components=1 || exit 1
-  cd $install_path
-  make clean test
+
+  # Build from source in a subshell
+  # we don't want to disturb current working dir
+  (cd $install_path; make clean test)
 
   if [ $? -ne 0 ]; then
     rm -rf $install_path
