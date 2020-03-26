@@ -11,55 +11,104 @@ install_elixir() {
     local tmp_download_dir=$TMPDIR
   fi
 
-  # path to the tar file
-  local source_path=$(get_download_file_path $install_type $version $tmp_download_dir)
-  download_source_file $install_type $version $source_path
-
-  if [ "$install_type" = "version" ]
-  then
-    echo "==> Copying release into place"
+  if [ "$install_type" = "version" ]; then
+    install_elixir_version $version $install_path $tmp_download_dir
   else
-    echo "==> Making the release"
+    install_elixir_ref $version $install_path $tmp_download_dir
   fi
 
-  # running this in a subshell
-  # we don't want to disturb current working dir
-  (
-    if [ "$install_type" = "version" ]; then
-      if ! type "unzip" &> /dev/null; then
-        echo "ERROR: unzip not found"
-        exit 1
-      fi
-
-      unzip -q $source_path -d $install_path || exit 1
-    else
-      tar zxf $source_path -C $install_path --strip-components=1 || exit 1
-      cd $install_path
-      make clean test
-
-      if [ $? -ne 0 ]; then
-        rm -rf $install_path
-        exit 1
-      fi
-    fi
-
-    mkdir -p $install_path/.mix/archives
-  )
+  mkdir -p $install_path/.mix/archives
 }
 
 
-download_source_file() {
-  local install_type=$1
-  local version=$2
-  local download_path=$3
-  local download_url=$(get_download_url $install_type $version)
+install_elixir_version() {
+  local version=$1
+  local install_path=$2
+  local tmp_download_dir=$3
+
+  # path to the tar file
+  local source_path="$tmp_download_dir/elixir-precompiled-${version}.zip"
+  download_zip_file_for_version $version $source_path
+
+  echo "==> Copying release into place"
+
+  if ! type "unzip" &> /dev/null; then
+    echo "ERROR: unzip not found"
+    exit 1
+  fi
+
+  unzip -q $source_path -d $install_path || exit 1
+}
+
+
+install_elixir_ref() {
+  local ref=$1
+  local install_path=$2
+  local tmp_download_dir=$3
+
+  # path to the tar file
+  local source_path="$tmp_download_dir/elixir-ref-${version}-src.tar.gz"
+  download_source_archive_for_ref $ref $source_path
+
+  echo "==> Making the release"
+
+  # Expand source archive
+  tar zxf $source_path -C $install_path --strip-components=1 || exit 1
+
+  # Build from source in a subshell
+  # we don't want to disturb current working dir
+  (cd $install_path; make clean test)
+
+  if [ $? -ne 0 ]; then
+    rm -rf $install_path
+    exit 1
+  fi
+}
+
+
+download_zip_file_for_version() {
+  local version=$1
+  local download_path=$2
+  local download_url=$(get_download_url_for_version $version)
 
   # determine if the file exists
-  echo "==> Checking whether specified Elixir release/reference exists..."
+  echo "==> Checking whether specified Elixir release exists..."
   http_status=$(curl -I -w %{http_code} -s -o /dev/null $download_url)
 
   if [ $http_status -eq 404 ]; then
-    echo -e """==> Elixir version not found.
+    cat <<EOS
+==> Elixir version not found.
+
+Hex.pm returned a 404 for the following URL:
+
+${download_url}
+
+You can view a list of all Elixir releases by running 'asdf list-all elixir'.
+
+Note: If you want to download a specific release of Elixir, please
+specify the full version number (e.g. 1.2.1 instead of 1.3).
+EOS
+
+    exit 1 # non zero due to file not existing
+  fi
+
+  echo "==> Downloading ${version} to ${download_path}"
+  curl -Lo $download_path -C - $download_url
+}
+
+
+download_source_archive_for_ref() {
+  local ref=$1
+  local download_path=$2
+  local download_url="https://github.com/elixir-lang/elixir/archive/${ref}.tar.gz"
+
+  # determine if the file exists
+  echo "==> Checking whether specified Elixir reference exists..."
+  http_status=$(curl -I -w %{http_code} -s -o /dev/null $download_url)
+
+  if [ $http_status -eq 404 ]; then
+    cat <<EOS
+==> Elixir reference not found.
 
 GitHub returned a 404 for the following URL:
 
@@ -67,55 +116,28 @@ ${download_url}
 
 You can view a list of all Elixir releases by running 'asdf list-all elixir'
 or by visiting https://github.com/elixir-lang/elixir/releases
-"""
 
-    if [ "$install_type" = "version" ]; then
-      echo """Note: If you want to download a specific release of Elixir, please
-specify the full version number (e.g. 1.2.1 instead of 1.3)."""
-    else
-      echo """Note: If you want to specify a git reference by which to install
-Elixir, it must be a valid git tag or branch (generally of the form v1.2.1)."""
-    fi
+Note: If you want to specify a git reference by which to install
+Elixir, it must be a valid git tag or branch (generally of the form v1.2.1).
+EOS
 
     exit 1 # non zero due to file not existing
   fi
 
-  echo -e """==> Downloading ${version} to ${source_path}"""
+  echo "==> Downloading ${ref} to ${download_path}"
   curl -Lo $download_path -C - $download_url
 }
 
 
-get_download_file_path() {
-  local install_type=$1
-  local version=$2
-  local tmp_download_dir=$3
+get_download_url_for_version() {
+  local version=$1
 
-  if [ "$install_type" = "version" ]; then
-    local pkg_name="elixir-precompiled-${version}.zip"
-  else
-    local pkg_name="elixir-${install_type}-${version}-src.tar.gz"
+  # if version is a release number, prepend v
+  if [[ "$version" =~ ^[0-9]+\.* ]]; then
+    version="v${version}"
   fi
 
-  echo "$tmp_download_dir/$pkg_name"
-}
-
-
-get_download_url() {
-  local install_type=$1
-  local version=$2
-
-  if [ "$install_type" = "version" ]
-  then
-    if [[ "$version" =~ ^[0-9]+\.* ]] ; then
-       # if version is a release number, prepend v
-       echo "https://repo.hex.pm/builds/elixir/v${version}.zip"
-    else
-       # otherwise it can be a branch name or commit sha
-       echo "https://repo.hex.pm/builds/elixir/${version}.zip"
-    fi
-  else
-    echo "https://github.com/elixir-lang/elixir/archive/${version}.tar.gz"
-  fi
+  echo "https://repo.hex.pm/builds/elixir/${version}.zip"
 }
 
 
