@@ -91,7 +91,7 @@ EOS
     exit 1 # non zero due to file not existing
   fi
 
-  echo "==> Downloading ${version} to ${source_path}"
+  echo "==> Downloading ${version} to ${download_path}"
   curl -Lo $download_path -C - $download_url
 }
 
@@ -123,7 +123,7 @@ EOS
     exit 1 # non zero due to file not existing
   fi
 
-  echo "==> Downloading ${ref} to ${source_path}"
+  echo "==> Downloading ${ref} to ${download_path}"
   curl -Lo $download_path -C - $download_url
 }
 
