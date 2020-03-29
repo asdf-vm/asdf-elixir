@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-# Get the list of versions available on Hex.pm.
+# Download the list of versions available on Hex.pm.
 #
 # Hex.pm keeps a public builds.txt file where it lists all the builds available
 # in their servers.
@@ -9,7 +9,7 @@
 # If we're able to successfuly fetch the builds file, its content is written to
 # STDOUT. Otherwise, nothing is written to STDOUT and an error message is
 # written to STDERR.
-get_hex_pm_versions() {
+download_hex_pm_builds() {
   local releases_url='https://repo.hex.pm/builds/elixir/builds.txt'
 
   if ! curl -fs $releases_url; then
@@ -27,6 +27,25 @@ If the problem persists, please report it on GitHub:
 https://github.com/asdf-vm/asdf-elixir/issues/new
 EOS
   fi
+}
+
+
+get_hex_pm_versions() {
+  # Get the builds file from Hex.pm
+  download_hex_pm_builds |
+    # Filter only the first field (the version name)
+    cut -d\  -f1 |
+    # Normalize version names
+    sed -E '
+      # Discard numeric versions just with major
+      /^v[0-9]+(-.*)?$/d;
+
+      # Discard numeric versions just with major and minor
+      /^v[0-9]+.[0-9]+(-.*)?$/d;
+
+      # Remove `v` prefix from numeric versions
+      s/^v([0-9]+.[0-9]+.[0-9]+(-.*)?)$/\1/
+    '
 }
 
 
@@ -71,10 +90,5 @@ sort_versions() {
   LC_ALL=C sort -t. -k 1,1 -k 2,2n -k 3,3n
 }
 
-# Fetch all built versions,
-# get only first column,
-# remove all major.minor versions leaving only major.minor.patch versions,
-# remove the v prefix, eg v1.0.0 -> 1.0.0
-# sort the versions
-versions=$(get_hex_pm_versions | cut -d\  -f1 | awk -F'.' 'NF!=2' | sed 's/v//;s/\",//' | sort_versions)
+versions=$(get_hex_pm_versions | sort_versions)
 echo $versions
