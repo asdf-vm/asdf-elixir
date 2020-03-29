@@ -90,5 +90,6 @@ sort_versions() {
   LC_ALL=C sort -t. -k 1,1 -k 2,2n -k 3,3n
 }
 
-versions=$(get_hex_pm_versions | sort_versions)
-echo $versions
+
+# Output the list of versions in a single line
+echo `get_hex_pm_versions | sort_versions`
