@@ -8,88 +8,40 @@ cmd="curl -s $releases_path"
 # Does not expect any arguments, assumes the list of versions is provided in
 # STDIN.
 #
-# Adapted with <3 from rbenv/ruby-build:
-# https://github.com/rbenv/ruby-build/pull/631/files#diff-fdcfb8a18714b33b07529b7d02b54f1dR942
 sort_versions() {
-  # Duplicate versions per line.
+  # Sort versions by the numerical values of each field.
   #
-  # sed is a tool for performing basic text transformations. It stands for
-  # Stream EDitor.
+  # By default, sort will consider the entire line and sort lines
+  # alphabetically according to the current system locale, which influences
+  # details like whether downcase letters come before the uppercase ones.
   #
-  # Quickly explained, sed will process the list of versions one line at a time
-  # (so one version at a time). It uses two buffers, _pattern_ and _hold_,
-  # where _pattern_ is replaced with the content of each line, and _hold_ is
-  # kept between lines. Commands are separated using `;` and will apply to each
-  # line.
+  # First, you'll notice the environment variable `LC_ALL` is being set to
+  # `C` for this command. This enables bytewise sorting, which means
+  # characters will be sorted by their numerical representation in the
+  # encoding table (think ASCII for US English). This makes the sorting
+  # algorithm completely uniform since it disregards the user's system
+  # locale.
   #
-  # Here's an overview of the commands used here:
-  # 1. `h` copies the current _pattern_ to _hold_.
-  # 2. `s/.p\([[:digit:]]\)/.z\1/` is a substitute command `s`, applied only if
-  #    _pattern_ matches `.p\([[:digit:]]\)`. At the time of writing, this
-  #    filter never matches, and therefore this command produces no changes on
-  #    _pattern_.
-  # 3. `G` appends a new line to _pattern_ and copies the content of _hold_
-  #    into it. If command 2 produces no changes, this effectively duplicates
-  #    the current line in _pattern_.
-  # 4. `s/\n/ /` is another substitute command `s`, applied only to lines that
-  #    match `/\n/`. It replaces any new line character with a regular space.
-  #    Following the result of command 3, this joins the two lines in _pattern_
-  #    with a space.
+  # Then you'll notice the `-t.` option, which changes the command to split
+  # lines on the provided separator `.`, instead of considering the whole
+  # line, which will influence the next options.
   #
-  # The end result is a line like `1.9.3` becomes `1.9.3 1.9.3`
+  # Finally you'll notice the `k` options, which are key definitions that
+  # tell sort how we want the sorting algorithm to look at lines. Each key
+  # definition will be taken into consideration in order when deciding the
+  # position of a line.
   #
-  sed 'h; s/.p\([[:digit:]]\)/.z\1/; G; s/\n/ /' | \
-    # Sort versions by the numerical values of each field.
-    #
-    # By default, sort will consider the entire line and sort lines
-    # alphabetically according to the current system locale, which influences
-    # details like whether downcase letters come before the uppercase ones.
-    #
-    # First, you'll notice the environment variable `LC_ALL` is being set to
-    # `C` for this command. This enables bytewise sorting, which means
-    # characters will be sorted by their numerical representation in the
-    # encoding table (think ASCII for US English). This makes the sorting
-    # algorithm completely uniform since it disregards the user's system
-    # locale.
-    #
-    # Then you'll notice the `-t.` option, which changes the command to split
-    # lines on the provided separator `.`, instead of considering the whole
-    # line, which will influence the next options.
-    #
-    # Finally you'll notice the `k` options, which are key definitions that
-    # tell sort how we want the sorting algorithm to look at lines. Each key
-    # definition will be taken into consideration in order when deciding the
-    # position of a line.
-    #
-    # Each key definition has the following format:
-    # * First it specifies the number of the field where this definition
-    #   starts, according to the separation specified by `-t`.
-    # * Then it specified the number of the field where this definition stops.
-    #   When you want to consider a single field, both start and stop values
-    #   are the same in the definition.
-    # * Finally, the definition may include a single-letter ordering option,
-    #   which will override the global ordering options for the current key. In
-    #   this case, we use `n` to ensure the sorting is numerical.
-    #
-    # We define keys up to the 5th field, but at the time of writing no known
-    # version has more than 3 fields.
-    #
-    LC_ALL=C sort -t. -k 1,1 -k 2,2n -k 3,3n -k 4,4n -k 5,5n | \
-    # Extract single version name.
-    #
-    # The end result of the stream transformation was a line like `1.9.3`
-    # became `1.9.3 1.9.3`. To revert this back to `1.9.3` we now use awk.
-    #
-    # Similar to sed, awk also processes one line at a time, and by default
-    # will assume the regular space ` ` as the separator. Awk commands then use
-    # special variables `$1`, `$2`, and so on, to refer, respectively, to each
-    # field in the line.
-    #
-    # So, by applying the `{print $2}` Awk program, we're matching every single
-    # line and printing only the second field, which effectively turns a line
-    # like `1.9.3 1.9.3` back into `1.9.3`.
-    #
-    awk '{print $2}'
+  # Each key definition has the following format:
+  # * First it specifies the number of the field where this definition
+  #   starts, according to the separation specified by `-t`.
+  # * Then it specified the number of the field where this definition stops.
+  #   When you want to consider a single field, both start and stop values
+  #   are the same in the definition.
+  # * Finally, the definitions include a single-letter ordering option, which
+  #   will override the global ordering options for the current key. In this
+  #   case, we use `n` to ensure the sorting is numerical.
+  #
+  LC_ALL=C sort -t. -k 1,1 -k 2,2n -k 3,3n
 }
 
 # Fetch all built versions,
