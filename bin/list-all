@@ -1,7 +1,34 @@
 #!/usr/bin/env bash
 
-releases_path="https://repo.hex.pm/builds/elixir/builds.txt"
-cmd="curl -s $releases_path"
+
+# Get the list of versions available on Hex.pm.
+#
+# Hex.pm keeps a public builds.txt file where it lists all the builds available
+# in their servers.
+#
+# If we're able to successfuly fetch the builds file, its content is written to
+# STDOUT. Otherwise, nothing is written to STDOUT and an error message is
+# written to STDERR.
+get_hex_pm_versions() {
+  local releases_url='https://repo.hex.pm/builds/elixir/builds.txt'
+
+  if ! curl -fs $releases_url; then
+    cat >&2 <<EOS
+==> Failed to fetch Hex.pm versions list.
+
+Hex.pm returned an error for the following URL:
+
+${releases_url}
+
+Make sure your internet connection is stable and that you can reach
+https://hex.pm/.
+
+If the problem persists, please report it on GitHub:
+https://github.com/asdf-vm/asdf-elixir/issues/new
+EOS
+  fi
+}
+
 
 # Sort the list of versions.
 #
@@ -49,5 +76,5 @@ sort_versions() {
 # remove all major.minor versions leaving only major.minor.patch versions,
 # remove the v prefix, eg v1.0.0 -> 1.0.0
 # sort the versions
-versions=$(eval $cmd | cut -d\  -f1 | awk -F'.' 'NF!=2' | sed 's/v//;s/\",//' | sort_versions)
+versions=$(get_hex_pm_versions | cut -d\  -f1 | awk -F'.' 'NF!=2' | sed 's/v//;s/\",//' | sort_versions)
 echo $versions
