@@ -1,19 +1,97 @@
 #!/usr/bin/env bash
 
-releases_path="https://repo.hex.pm/builds/elixir/builds.txt"
-cmd="curl -s $releases_path"
 
-# stolen from https://github.com/rbenv/ruby-build/pull/631/files#diff-fdcfb8a18714b33b07529b7d02b54f1dR942
-# and adapted
-function sort_versions() {
-  sed 'h; s/.p\([[:digit:]]\)/.z\1/; G; s/\n/ /' | \
-    LC_ALL=C sort -t. -k 1,1 -k 2,2n -k 3,3n -k 4,4n -k 5,5n | awk '{print $2}'
+# Download the list of versions available on Hex.pm.
+#
+# Hex.pm keeps a public builds.txt file where it lists all the builds available
+# in their servers.
+#
+# If we're able to successfuly fetch the builds file, its content is written to
+# STDOUT. Otherwise, nothing is written to STDOUT and an error message is
+# written to STDERR.
+download_hex_pm_builds() {
+  local releases_url='https://repo.hex.pm/builds/elixir/builds.txt'
+
+  if ! curl -fs $releases_url; then
+    cat >&2 <<EOS
+==> Failed to fetch Hex.pm versions list.
+
+Hex.pm returned an error for the following URL:
+
+${releases_url}
+
+Make sure your internet connection is stable and that you can reach
+https://hex.pm/.
+
+If the problem persists, please report it on GitHub:
+https://github.com/asdf-vm/asdf-elixir/issues/new
+EOS
+
+    return 1
+  fi
 }
 
-# Fetch all built versions,
-# get only first column,
-# remove all major.minor versions leaving only major.minor.patch versions,
-# remove the v prefix, eg v1.0.0 -> 1.0.0
-# sort the versions
-versions=$(eval $cmd | cut -d\  -f1 | awk -F'.' 'NF!=2' | sed 's/v//;s/\",//' | sort_versions)
-echo $versions
+
+get_hex_pm_versions() {
+  # Get the builds file from Hex.pm
+  download_hex_pm_builds |
+    # Filter only the first field (the version name)
+    cut -d\  -f1 |
+    # Normalize version names
+    sed -E '
+      # Discard numeric versions just with major
+      /^v[0-9]+(-.*)?$/d;
+
+      # Discard numeric versions just with major and minor
+      /^v[0-9]+\.[0-9]+(-.*)?$/d;
+
+      # Remove `v` prefix from numeric versions
+      s/^v([0-9]+\.[0-9]+\.[0-9]+(-.*)?)$/\1/
+    '
+}
+
+
+# Sort the list of versions.
+#
+# Does not expect any arguments, assumes the list of versions is provided in
+# STDIN.
+#
+sort_versions() {
+  # Sort versions by the numerical values of each field.
+  #
+  # By default, sort will consider the entire line and sort lines
+  # alphabetically according to the current system locale, which influences
+  # details like whether downcase letters come before the uppercase ones.
+  #
+  # First, you'll notice the environment variable `LC_ALL` is being set to
+  # `C` for this command. This enables bytewise sorting, which means
+  # characters will be sorted by their numerical representation in the
+  # encoding table (think ASCII for US English). This makes the sorting
+  # algorithm completely uniform since it disregards the user's system
+  # locale.
+  #
+  # Then you'll notice the `-t.` option, which changes the command to split
+  # lines on the provided separator `.`, instead of considering the whole
+  # line, which will influence the next options.
+  #
+  # Finally you'll notice the `k` options, which are key definitions that
+  # tell sort how we want the sorting algorithm to look at lines. Each key
+  # definition will be taken into consideration in order when deciding the
+  # position of a line.
+  #
+  # Each key definition has the following format:
+  # * First it specifies the number of the field where this definition
+  #   starts, according to the separation specified by `-t`.
+  # * Then it specified the number of the field where this definition stops.
+  #   When you want to consider a single field, both start and stop values
+  #   are the same in the definition.
+  # * Finally, the definitions include a single-letter ordering option, which
+  #   will override the global ordering options for the current key. In this
+  #   case, we use `n` to ensure the sorting is numerical.
+  #
+  LC_ALL=C sort -t. -k 1,1 -k 2,2n -k 3,3n
+}
+
+
+# Output the list of versions in a single line
+echo `get_hex_pm_versions | sort_versions`
