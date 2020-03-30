@@ -43,10 +43,10 @@ get_hex_pm_versions() {
       /^v[0-9]+(-.*)?$/d;
 
       # Discard numeric versions just with major and minor
-      /^v[0-9]+.[0-9]+(-.*)?$/d;
+      /^v[0-9]+\.[0-9]+(-.*)?$/d;
 
       # Remove `v` prefix from numeric versions
-      s/^v([0-9]+.[0-9]+.[0-9]+(-.*)?)$/\1/
+      s/^v([0-9]+\.[0-9]+\.[0-9]+(-.*)?)$/\1/
     '
 }
 
