@@ -75,7 +75,7 @@ download_zip_file_for_version() {
   echo "==> Checking whether specified Elixir release exists..."
   http_status=$(curl -I -w %{http_code} -s -o /dev/null $download_url)
 
-  if [ $http_status -eq 404 ]; then
+  if [ $http_status -eq 404 ] || [ $http_status -eq 403 ]; then
     cat <<EOS
 ==> Elixir version not found.
 
