@@ -49,7 +49,7 @@ asdf local elixir ref:<commit reference>
 asdf global elixir ref:<commit reference>
 ```
 
-You can also [compile Elixir from source](https://github.com/elixir-lang/elixir/tree/master#compiling-from-source) without using `asdf` (for example, so that you can use the `master` branch of elixir or a branch with your own modifications), then use it by specifying the path:
+You can also [compile Elixir from source](https://github.com/elixir-lang/elixir/tree/master#compiling-from-source) without using `asdf` (for example, so that you can use the `master` branch of elixir or a branch with your own modifications), then use it by specifying the directory path:
 
 ```
 # After Elixir already installed into /path/to/elixir
