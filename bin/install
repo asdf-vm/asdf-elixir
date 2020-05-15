@@ -79,7 +79,7 @@ download_zip_file_for_version() {
     cat <<EOS
 ==> Elixir version not found.
 
-Hex.pm returned a 404 for the following URL:
+Hex.pm returned a ${http_status} for the following URL:
 
 ${download_url}
 
