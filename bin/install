@@ -47,7 +47,7 @@ install_elixir_ref() {
   local tmp_download_dir=$3
 
   # path to the tar file
-  local source_path="$tmp_download_dir/elixir-ref-${version}-src.tar.gz"
+  local source_path="$tmp_download_dir/elixir-ref-${ref}-src.tar.gz"
   download_source_archive_for_ref $ref $source_path
 
   echo "==> Making the release"
