@@ -15,7 +15,7 @@ If you have a Debian system you can install it by typing:
 asdf plugin-add elixir https://github.com/asdf-vm/asdf-elixir.git
 ```
 
-## Check compatability elixir and erlang:
+## Check compatibility between elixir and erlang:
 
 https://hexdocs.pm/elixir/master/compatibility-and-deprecations.html#compatibility-between-elixir-and-erlang-otp
 
@@ -75,7 +75,7 @@ elixir path:/path/to/elixir
 
 ## Elixir escripts support
 
-This plugin supports elixir escripts adding them to your path just like any other elixir binary.
+This plugin supports elixir escripts, adding them to your path just like any other elixir binary.
 Whenever you install a new escript with `mix escript.install` you need to `asdf reshim elixir` in order
 to create shims for it.
 
