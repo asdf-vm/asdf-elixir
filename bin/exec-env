@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-if [ "$MIX_ARCHIVES" = "" ]; then
-  export MIX_ARCHIVES=$ASDF_INSTALL_PATH/.mix/archives
-fi
-
 if [ "$MIX_HOME" = "" ]; then
   export MIX_HOME=$ASDF_INSTALL_PATH/.mix
+fi
+
+if [ "$MIX_ARCHIVES" = "" ]; then
+  export MIX_ARCHIVES=$MIX_HOME/archives
 fi
 
 
