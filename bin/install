@@ -18,6 +18,9 @@ install_elixir() {
   fi
 
   mkdir -p $install_path/.mix/archives
+
+  MIX_ARCHIVES=$install_path/.mix/archives $install_path/bin/mix local.hex --if-missing --force
+  MIX_HOME=$install_path/.mix $install_path/bin/mix local.rebar --if-missing --force
 }
 
 
