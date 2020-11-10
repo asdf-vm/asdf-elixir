@@ -149,4 +149,18 @@ get_download_url_for_version() {
   echo "https://repo.hex.pm/builds/elixir/${version}.zip"
 }
 
+run_default_mix_commands() {
+  local install_path=$1
+  local default_mix_commands="${HOME}/.default-mix-commands"
+
+  if [ ! -f "$default_mix_commands" ]; then return; fi
+
+  while read -u 7 -ra command; do
+    echo -e "\nRunning \033[33mmix ${command[@]} --force\033[39m... "
+    source "$(dirname "$0")/exec-env"
+    PATH=$install_path/bin:$PATH $install_path/bin/mix "${command[@]}" --force
+  done 7<"$default_mix_commands"
+}
+
 install_elixir "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
+run_default_mix_commands "$ASDF_INSTALL_PATH"
