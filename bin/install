@@ -5,10 +5,11 @@ install_elixir() {
   local version=$2
   local install_path=$3
 
-  if [ "$TMPDIR" = "" ]; then
-    local tmp_download_dir=$(mktemp -d -t elixir_build_XXXXXX)
+  if [ -n "$ASDF_DOWNLOAD_PATH" ]; then
+    [ ! -d "$ASDF_DOWNLOAD_PATH" ] && mkdir -p "$ASDF_DOWNLOAD_PATH"
+    local tmp_download_dir="$ASDF_DOWNLOAD_PATH"
   else
-    local tmp_download_dir=$TMPDIR
+    local tmp_download_dir=$(mktemp -d -t elixir_build_XXXXXX)
   fi
 
   if [ "$install_type" = "version" ]; then
