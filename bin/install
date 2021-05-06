@@ -58,13 +58,20 @@ install_elixir_ref() {
   # Expand source archive
   tar zxf $source_path -C $install_path --strip-components=1 || exit 1
 
-  # Build from source in a subshell
-  # we don't want to disturb current working dir
-  (cd $install_path; make clean test)
+  # Build from source in a subshell because we don't want to disturb current working dir
+  # installing using DESTDIR makes sure there are no tempfiles in the install dir
+  # and fixes compatibility issues with the elixir-ls language server project
+  (cd $install_path; make clean test DESTDIR=$install_path install)
 
+  # handle the result
   if [ $? -ne 0 ]; then
+    echo "Build failed, cleaning..."
     rm -rf $install_path
     exit 1
+  else
+    echo "Build succeeded!"
+    cp -rT $install_path/usr/local $install_path
+    rm -rf $install_path/usr
   fi
 }
 
