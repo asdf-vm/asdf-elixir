@@ -70,7 +70,7 @@ install_elixir_ref() {
     exit 1
   else
     echo "Build succeeded!"
-    cp -rT $install_path/usr/local $install_path
+    cp -a $install_path/usr/local/. $install_path/
     rm -rf $install_path/usr
   fi
 }
