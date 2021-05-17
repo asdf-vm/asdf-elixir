@@ -73,6 +73,8 @@ Or if you've already compiled Elixir from source in a specific directory:
 elixir path:/path/to/elixir
 ```
 
+Note that the path specified must be an absolute path to the Elixir installation's root directory (e.g. the directory containing the `bin` directory).
+
 ## Elixir escripts support
 
 This plugin supports elixir escripts, adding them to your path just like any other elixir binary.
