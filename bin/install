@@ -83,7 +83,7 @@ download_zip_file_for_version() {
 
   # determine if the file exists
   echo "==> Checking whether specified Elixir release exists..."
-  http_status=$(curl -I -w %{http_code} -s -o /dev/null $download_url)
+  http_status=$(curl -L -I -w %{http_code} -s -o /dev/null $download_url)
 
   if [ $http_status -eq 404 ] || [ $http_status -eq 403 ]; then
     cat <<EOS
@@ -103,7 +103,7 @@ EOS
   fi
 
   echo "==> Downloading ${version} to ${download_path}"
-  curl -Lo $download_path -C - $download_url
+  curl -Lo $download_path $download_url
 }
 
 
@@ -114,7 +114,8 @@ download_source_archive_for_ref() {
 
   # determine if the file exists
   echo "==> Checking whether specified Elixir reference exists..."
-  http_status=$(curl -I -w %{http_code} -s -o /dev/null $download_url)
+  echo "Download url: $download_url"
+  http_status=$(curl -L -I -w %{http_code} -s -o /dev/null $download_url)
 
   if [ $http_status -eq 404 ]; then
     cat <<EOS
@@ -135,7 +136,7 @@ EOS
   fi
 
   echo "==> Downloading ${ref} to ${download_path}"
-  curl -Lo $download_path -C - $download_url
+  curl -Lo $download_path $download_url
 }
 
 
