@@ -58,6 +58,8 @@ asdf local elixir path:/path/to/elixir
 asdf global elixir path:/path/to/elixir
 ```
 
+> **Note**: Don't forget to compile erlang with xsltproc and fop libraries
+
 
 ### .tool-versions file
 
