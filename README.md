@@ -41,7 +41,7 @@ Be sure to also install the corresponding Erlang/OTP version with asdf-erlang, a
 
 ### Using the CLI
 
-You can download and compile a specific commit reference from the [Elixir GitHub repository](https://github.com/elixir-lang/elixir/commits/master) by running: `asdf install elixir ref:<commit reference>`. You can then set the local/global version to your new version by running:
+You can download and compile a specific commit reference from the [Elixir GitHub repository](https://github.com/elixir-lang/elixir/commits/main) by running: `asdf install elixir ref:<commit reference>`. You can then set the local/global version to your new version by running:
 
 ```
 asdf local elixir ref:<commit reference>
