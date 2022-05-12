@@ -36,7 +36,8 @@ install_elixir_version() {
   echo "==> Copying release into place"
 
   if ! type "unzip" &> /dev/null; then
-    echo "ERROR: unzip not found"
+    echo "ERROR: Command 'unzip' not found."
+    echo "unzip must be installed on your system."
     exit 1
   fi
 
