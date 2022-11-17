@@ -7,5 +7,3 @@ fi
 if [ "$MIX_HOME" = "" ]; then
   export MIX_HOME=$ASDF_INSTALL_PATH/.mix
 fi
-
-

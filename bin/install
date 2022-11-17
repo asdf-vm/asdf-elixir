@@ -4,25 +4,25 @@ install_elixir() {
   local install_type=$1
   local version=$2
   local install_path=$3
+  local tmp_download_dir
 
   if [ -n "$ASDF_DOWNLOAD_PATH" ]; then
     [ ! -d "$ASDF_DOWNLOAD_PATH" ] && mkdir -p "$ASDF_DOWNLOAD_PATH"
-    local tmp_download_dir="$ASDF_DOWNLOAD_PATH"
+    tmp_download_dir="$ASDF_DOWNLOAD_PATH"
   elif [ -z "$TMPDIR" ]; then
-    local tmp_download_dir=$(mktemp -d -t elixir_build_XXXXXX)
+    tmp_download_dir="$(mktemp -d -t elixir_build_XXXXXX)"
   else
-    local tmp_download_dir=$TMPDIR
+    tmp_download_dir="$TMPDIR"
   fi
 
   if [ "$install_type" = "version" ]; then
-    install_elixir_version $version $install_path $tmp_download_dir
+    install_elixir_version "$version" "$install_path" "$tmp_download_dir"
   else
-    install_elixir_ref $version $install_path $tmp_download_dir
+    install_elixir_ref "$version" "$install_path" "$tmp_download_dir"
   fi
 
-  mkdir -p $install_path/.mix/archives
+  mkdir -p "$install_path/.mix/archives"
 }
-
 
 install_elixir_version() {
   local version=$1
@@ -31,19 +31,18 @@ install_elixir_version() {
 
   # path to the tar file
   local source_path="$tmp_download_dir/elixir-precompiled-${version}.zip"
-  download_zip_file_for_version $version $source_path
+  download_zip_file_for_version "$version" "$source_path"
 
   echo "==> Copying release into place"
 
-  if ! type "unzip" &> /dev/null; then
+  if ! type "unzip" &>/dev/null; then
     echo "ERROR: Command 'unzip' not found."
     echo "unzip must be installed on your system."
     exit 1
   fi
 
-  unzip -q $source_path -d $install_path || exit 1
+  unzip -q "$source_path" -d "$install_path" || exit 1
 }
-
 
 install_elixir_ref() {
   local ref=$1
@@ -52,41 +51,42 @@ install_elixir_ref() {
 
   # path to the tar file
   local source_path="$tmp_download_dir/elixir-ref-${ref}-src.tar.gz"
-  download_source_archive_for_ref $ref $source_path
+  download_source_archive_for_ref "$ref" "$source_path"
 
   echo "==> Making the release"
 
   # Expand source archive
-  tar zxf $source_path -C $install_path --strip-components=1 || exit 1
+  tar zxf "$source_path" -C "$install_path" --strip-components=1 || exit 1
 
   # Build from source in a subshell because we don't want to disturb current working dir
   # installing using DESTDIR makes sure there are no tempfiles in the install dir
   # and fixes compatibility issues with the elixir-ls language server project
-  (cd $install_path; make clean test DESTDIR=$install_path install)
-
-  # handle the result
-  if [ $? -ne 0 ]; then
+  if ! (
+    cd "$install_path" || exit 1
+    make clean test DESTDIR="$install_path" install
+  ); then
+    # handle the result
     echo "Build failed, cleaning..."
-    rm -rf $install_path
+    rm -rf "$install_path"
     exit 1
   else
     echo "Build succeeded!"
-    cp -a $install_path/usr/local/. $install_path/
-    rm -rf $install_path/usr
+    cp -a "$install_path/usr/local/." "$install_path/"
+    rm -rf "${install_path:?}/usr"
   fi
 }
-
 
 download_zip_file_for_version() {
   local version=$1
   local download_path=$2
-  local download_url=$(get_download_url_for_version $version)
+  local download_url
+  download_url="$(get_download_url_for_version "$version")"
 
   # determine if the file exists
   echo "==> Checking whether specified Elixir release exists..."
-  http_status=$(curl -I -w %{http_code} -s -o /dev/null $download_url)
+  http_status=$(curl -I -w '%{http_code}' -s -o /dev/null "$download_url")
 
-  if [ $http_status -eq 404 ] || [ $http_status -eq 403 ]; then
+  if [ "$http_status" -eq 404 ] || [ "$http_status" -eq 403 ]; then
     cat <<EOS
 ==> Elixir version not found.
 
@@ -104,9 +104,8 @@ EOS
   fi
 
   echo "==> Downloading ${version} to ${download_path}"
-  curl -Lo $download_path -C - $download_url
+  curl -Lo "$download_path" -C - "$download_url"
 }
-
 
 download_source_archive_for_ref() {
   local ref=$1
@@ -115,9 +114,9 @@ download_source_archive_for_ref() {
 
   # determine if the file exists
   echo "==> Checking whether specified Elixir reference exists..."
-  http_status=$(curl -I -w %{http_code} -s -o /dev/null $download_url)
+  http_status=$(curl -I -w '%{http_code}' -s -o /dev/null "$download_url")
 
-  if [ $http_status -eq 404 ]; then
+  if [ "$http_status" -eq 404 ]; then
     cat <<EOS
 ==> Elixir reference not found.
 
@@ -136,9 +135,8 @@ EOS
   fi
 
   echo "==> Downloading ${ref} to ${download_path}"
-  curl -Lo $download_path -C - $download_url
+  curl -Lo "$download_path" -C - "$download_url"
 }
-
 
 get_download_url_for_version() {
   local version=$1
@@ -151,5 +149,4 @@ get_download_url_for_version() {
   echo "https://repo.hex.pm/builds/elixir/${version}.zip"
 }
 
-
-install_elixir $ASDF_INSTALL_TYPE $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
+install_elixir "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"

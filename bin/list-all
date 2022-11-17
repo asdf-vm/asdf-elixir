@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 # Download the list of versions available on Hex.pm.
 #
 # Hex.pm keeps a public builds.txt file where it lists all the builds available
@@ -31,7 +30,6 @@ EOS
   fi
 }
 
-
 get_hex_pm_versions() {
   # Get the builds file from Hex.pm
   download_hex_pm_builds |
@@ -49,7 +47,6 @@ get_hex_pm_versions() {
       s/^v([0-9]+\.[0-9]+\.[0-9]+(-.*)?)$/\1/
     '
 }
-
 
 # Sort the list of versions.
 #
@@ -92,6 +89,5 @@ sort_versions() {
   LC_ALL=C sort -t. -k 1,1 -k 2,2n -k 3,3n
 }
 
-
 # Output the list of versions in a single line
-echo `get_hex_pm_versions | sort_versions`
+get_hex_pm_versions | sort_versions | tr '\n' ' '
