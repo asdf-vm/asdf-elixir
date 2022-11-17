@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Unoffical Bash "strict mode"
+# http://redsymbol.net/articles/unofficial-bash-strict-mode/
+set -euo pipefail
+#ORIGINAL_IFS=$IFS
+IFS=$'\t\n' # Stricter IFS settings
+
+# This script exists to make linting during local development easy. These checks
+# are identical to the ones run by the Github workflow.
+
+# Run shellcheck on Bash scripts
+shellcheck bin/* scripts/*
+
+# Run formatter
+shfmt -i 2 -d .
