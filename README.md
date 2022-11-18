@@ -81,6 +81,18 @@ This plugin supports elixir escripts, adding them to your path just like any oth
 Whenever you install a new escript with `mix escript.install` you need to `asdf reshim elixir` in order
 to create shims for it.
 
+## Default `mix` commands
+
+After installing you can specify which additional mix commands must be run after adding a new Elixir version.
+This can be particurlarly useful for installing often used archives.
+They need to be specified in `$HOME/.default-mix-commands`, the flag `--force` will be added by default.
+An example:
+
+```
+local.hex
+local.rebar
+archive.install hex phx_new
+```
 
 ## Use
 
