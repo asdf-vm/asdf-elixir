@@ -155,12 +155,12 @@ run_default_mix_commands() {
 
   if [ ! -f "$default_mix_commands" ]; then return; fi
 
-  while read -u 7 -ra command; do
+  while read -ra command; do
     echo -e "\nRunning \033[33mmix ${command[*]} --force\033[39m... "
     # shellcheck source=bin/exec-env
     source "$(dirname "$0")/exec-env"
-    PATH=$install_path/bin:$PATH MIX_EXS="" "$install_path"/bin/mix "${command[@]}" --force
-  done 7<"$default_mix_commands"
+    PATH=$install_path/bin:$PATH MIX_EXS="" "$install_path"/bin/mix "${command[@]}" --force </dev/null
+  done <"$default_mix_commands"
 }
 
 install_elixir "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
