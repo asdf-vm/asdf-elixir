@@ -84,7 +84,7 @@ download_zip_file_for_version() {
 
   # determine if the file exists
   echo "==> Checking whether specified Elixir release exists..."
-  http_status=$(curl -I -w '%{http_code}' -s -o /dev/null "$download_url")
+  http_status=$(curl -L -I -w '%{http_code}' -s -o /dev/null "$download_url")
 
   if [ "$http_status" -eq 404 ] || [ "$http_status" -eq 403 ]; then
     cat <<EOS
@@ -114,7 +114,7 @@ download_source_archive_for_ref() {
 
   # determine if the file exists
   echo "==> Checking whether specified Elixir reference exists..."
-  http_status=$(curl -I -w '%{http_code}' -s -o /dev/null "$download_url")
+  http_status=$(curl -L -I -w '%{http_code}' -s -o /dev/null "$download_url")
 
   if [ "$http_status" -eq 404 ]; then
     cat <<EOS
@@ -146,7 +146,7 @@ get_download_url_for_version() {
     version="v${version}"
   fi
 
-  echo "https://repo.hex.pm/builds/elixir/${version}.zip"
+  echo "https://builds.hex.pm/builds/elixir/${version}.zip"
 }
 
 run_default_mix_commands() {
