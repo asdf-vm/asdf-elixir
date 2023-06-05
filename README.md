@@ -17,7 +17,7 @@ asdf plugin-add elixir https://github.com/asdf-vm/asdf-elixir.git
 
 ## Check compatibility between elixir and erlang:
 
-https://hexdocs.pm/elixir/master/compatibility-and-deprecations.html#compatibility-between-elixir-and-erlang-otp
+https://hexdocs.pm/elixir/compatibility-and-deprecations.html#compatibility-between-elixir-and-erlang-otp
 
 ## Elixir precompiled versions
 
