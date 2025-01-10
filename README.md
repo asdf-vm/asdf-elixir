@@ -12,7 +12,7 @@ If you have a Debian system you can install it by typing:
 > *Elixir requires Erlang to be installed. You can use the [asdf-erlang](https://github.com/asdf-vm/asdf-erlang) plugin to install Erlang versions.*
 
 ```
-asdf plugin-add elixir https://github.com/asdf-vm/asdf-elixir.git
+asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
 ```
 
 ## Check compatibility between elixir and erlang:
