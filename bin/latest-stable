@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# list all elixir releases
+# reject releases before 1.0.0 (starting with 0)
+# reject main and master branches
+# reject releases with otp version
+# reject release candidates
+# finally take last one
+ASDF_ELIXIR_LATEST_VERSION=$(asdf list all elixir | grep -Pv "^0|^main|^master|otp|rc|^$" | tail -n 1)
+
+# gets current erlang version without headers
+# changes spaces to new line
+# takes second line (Name Version Source Installed)
+ASDF_ELIXIR_LATEST_OTP=$(asdf current --no-header erlang | tr -s " " "\n" | sed -n 2p)
+
+# Note: asdf latest does not allows latest stable version to start with number
+#       therefore installing from source by git ref is not supported, see:
+#       https://github.com/asdf-vm/asdf/blob/v0.16.5/internal/versions/versions.go#L276
+echo "$ASDF_ELIXIR_LATEST_VERSION-otp-$ASDF_ELIXIR_LATEST_OTP"
