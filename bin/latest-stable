@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
-# list all elixir releases
+# calling a script to list all elixir releases
 # reject releases before 1.0.0 (starting with 0)
 # reject main and master branches
 # reject releases with otp version
 # reject release candidates
+# reject empty line
 # finally take last one
-ASDF_ELIXIR_LATEST_VERSION=$(asdf list all elixir | grep -Pv "^0|^main|^master|otp|rc|^$" | tail -n 1)
+ASDF_ELIXIR_LATEST_VERSION=$(./list-all | grep -Pv "^0|^main|^master|otp|rc|^$" | tail -n 1)
 
 # gets current erlang version without headers
 # changes spaces to new line
