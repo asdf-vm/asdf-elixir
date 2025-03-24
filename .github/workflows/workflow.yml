@@ -10,7 +10,7 @@ on:
       - "**.md"
   push:
     branches:
-      - main
+      - master
     paths-ignore:
       - "**.md"
 
@@ -20,10 +20,11 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - macos-latest
-          - ubuntu-latest
-
-    runs-on: ${{ matrix.os }}
+          - os: macos-latest
+            version: 1.18.3-otp-27
+          - os: ubuntu-latest
+            version: 1.13.4-otp-22
+    runs-on: ${{ matrix.os.os }}
 
     steps:
       - name: Install system packages on Ubuntu
@@ -38,7 +39,7 @@ jobs:
         uses: asdf-vm/actions/plugin-test@v2
         with:
           command: elixir --version
-          version: 1.13.4-otp-22
+          version: ${{ matrix.os.version }}
 
   lint:
     runs-on: ubuntu-latest
