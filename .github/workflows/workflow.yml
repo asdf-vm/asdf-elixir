@@ -24,22 +24,22 @@ jobs:
             version: 1.18.3-otp-27
           - os: ubuntu-latest
             version: 1.13.4-otp-22
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os.os }}
 
     steps:
       - name: Install system packages on Ubuntu
-        if: ${{ runner.os.os == 'Linux' }}
+        if: ${{ runner.os == 'Linux' }}
         run: sudo apt-get install curl erlang
 
       - name: Install system packages on macOS
-        if: ${{ runner.os.os == 'macOS' }}
+        if: ${{ runner.os == 'macOS' }}
         run: brew install coreutils erlang
 
       - name: Test plugin
         uses: asdf-vm/actions/plugin-test@v2
         with:
           command: elixir --version
-          version: ${{ runner.os.version }}
+          version: ${{ matrix.os.version }}
 
   lint:
     runs-on: ubuntu-latest
