@@ -7,7 +7,7 @@
 # reject release candidates
 # reject empty line
 # finally take last one
-ASDF_ELIXIR_LATEST_VERSION=$(./list-all | grep -Pv "^0|^main|^master|otp|rc|^$" | tail -n 1)
+ASDF_ELIXIR_LATEST_VERSION=$(./list-all | tr " " "\n" | grep -Pv "^0|^main|^master|otp|rc|^$" | tail -n 1)
 
 # gets current erlang version without headers
 # changes spaces to new line
