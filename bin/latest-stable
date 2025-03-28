@@ -12,7 +12,7 @@ ASDF_ELIXIR_LATEST_VERSION=$(./list-all | grep -Pv "^0|^main|^master|otp|rc|^$" 
 # gets current erlang version without headers
 # changes spaces to new line
 # takes second line (Name Version Source Installed)
-ASDF_ELIXIR_LATEST_OTP=$(asdf current --no-header erlang | tr -s " " "\n" | sed -n 2p)
+ASDF_ELIXIR_LATEST_OTP=$(asdf current --no-header erlang | tr -s " ." "\n" | sed -n 2p)
 
 # Note: asdf latest does not allows latest stable version to start with number
 #       therefore installing from source by git ref is not supported, see:
