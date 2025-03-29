@@ -12,7 +12,12 @@ ASDF_ELIXIR_LATEST_VERSION=$(./list-all | tr " " "\n" | grep -Ev "^0|^main|^mast
 # gets current erlang version without headers
 # changes spaces to new line
 # takes second line (Name Version Source Installed)
-ASDF_ELIXIR_LATEST_OTP=$(asdf current --no-header erlang | tr -s " ." "\n" | sed -n 2p)
+if printf '0.16.0\n%s\n' $ASDF_VERSION | sort -CV; then
+  # use --no-header flag only in latest asdf API (go builds)
+  ASDF_ELIXIR_LATEST_OTP=$(asdf current --no-header erlang | tr -s " ." "\n" | sed -n 2p)
+else
+  ASDF_ELIXIR_LATEST_OTP=$(asdf current erlang | tr -s " ." "\n" | sed -n 2p)
+fi
 
 # Note: asdf latest does not allows latest stable version to start with number
 #       therefore installing from source by git ref is not supported, see:
