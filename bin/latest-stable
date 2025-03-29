@@ -9,10 +9,11 @@
 # finally take last one
 ASDF_ELIXIR_LATEST_VERSION=$(./list-all | tr " " "\n" | grep -Ev "^0|^main|^master|otp|rc|^$" | tail -n 1)
 
+ASDF_VERSION="$(asdf version)"
 # gets current erlang version without headers
 # changes spaces to new line
 # takes second line (Name Version Source Installed)
-if printf "0.16.0\n%s\n" "$(asdf version)" | sort -CV; then
+if printf "0.16.0\n%s\n" "${ASDF_VERSION#v}" | sort -CV; then
   # use --no-header flag only in latest asdf API (go builds)
   ASDF_ELIXIR_LATEST_OTP=$(asdf current --no-header erlang | tr -s " ." "\n" | sed -n 2p)
 else
