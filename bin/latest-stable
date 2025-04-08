@@ -10,7 +10,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # reject release candidates
 # reject empty line
 # finally take last one
-ASDF_ELIXIR_LATEST_VERSION=$($SCRIPT_DIR/list-all | tr " " "\n" | grep -Ev "^0|^main|^master|otp|rc|^$" | tail -n 1)
+ASDF_ELIXIR_LATEST_VERSION=$("$SCRIPT_DIR"/list-all | tr " " "\n" | grep -Ev "^0|^main|^master|otp|rc|^$" | tail -n 1)
 
 # gets current erlang version without headers
 # changes spaces to new line
