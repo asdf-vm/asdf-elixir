@@ -3,7 +3,7 @@
 version_gte_api_change() {
   # Split the versions by dot character into arrays
   IFS='.' read -r -a input_version_array <<<"$1"
-  IFS='.' read -r -a api_change_version_array <<<"1.16.0"
+  IFS='.' read -r -a api_change_version_array <<<"0.16.0"
 
   # Support for 3 numbers in semantic versioning
   for i in {0..2}; do
