@@ -2,18 +2,18 @@
 
 version_gte_api_change() {
   # Split the versions by dot character into arrays
-  IFS='.' read -r -a input_version_array <<< "$1"
-  IFS='.' read -r -a api_change_version_array <<< "1.16.0"
+  IFS='.' read -r -a input_version_array <<<"$1"
+  IFS='.' read -r -a api_change_version_array <<<"1.16.0"
 
   # Support for 3 numbers in semantic versioning
   for i in {0..2}; do
     # suport for shorter versions by padding with 0
     [[ -z ${input_version_array[i]} ]] && input_version_array[i]=0
 
-    if (( input_version_array[i] > api_change_version_array[i] )); then
+    if ((input_version_array[i] > api_change_version_array[i])); then
       # input version is higher
       return 0
-    elif (( input_version_array[i] < api_change_version_array[i] )); then
+    elif ((input_version_array[i] < api_change_version_array[i])); then
       # input version is lower
       return 1
     fi
@@ -48,4 +48,4 @@ fi
 # Note: asdf latest does not allows latest stable version to start with number
 #       therefore installing from source by git ref is not supported, see:
 #       https://github.com/asdf-vm/asdf/blob/v0.16.5/internal/versions/versions.go#L276
-printf "$ASDF_ELIXIR_LATEST_VERSION-otp-%s\n" `printf "$ASDF_ELIXIR_LATEST_OTP" | tr -s " ." "\n" | sed -n 2p`
+printf "$ASDF_ELIXIR_LATEST_VERSION-otp-%s\n" $(printf "$ASDF_ELIXIR_LATEST_OTP" | tr -s " ." "\n" | sed -n 2p)
