@@ -24,6 +24,9 @@ version_gte_api_change() {
   return 0
 }
 
+# get the directory of the current script
+ASDF_ELIXIR_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # calling a script to list all elixir releases
 # reject releases before 1.0.0 (starting with 0)
 # reject main and master branches
@@ -31,7 +34,7 @@ version_gte_api_change() {
 # reject release candidates
 # reject empty line
 # finally take last one
-ASDF_ELIXIR_LATEST_VERSION=$(./list-all | tr " " "\n" | grep -Ev "^0|^main|^master|otp|rc|^$" | tail -n 1)
+ASDF_ELIXIR_LATEST_VERSION=$("$ASDF_ELIXIR_SCRIPT_DIR"/list-all | tr " " "\n" | grep -Ev "^0|^main|^master|otp|rc|^$" | tail -n 1)
 
 # support for v-dev and different asdf API versions
 ASDF_ELIXIR_ASDF_VERSION="$(asdf version)"
