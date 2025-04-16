@@ -1,5 +1,29 @@
 #!/usr/bin/env bash
 
+version_gte_api_change() {
+  # Split the versions by dot character into arrays
+  IFS='.' read -r -a input_version_array <<< "$1"
+  IFS='.' read -r -a api_change_version_array <<< "1.16.0"
+
+  # Support for 3 numbers in semantic versioning
+  for i in {0..2}; do
+    # suport for shorter versions by padding with 0
+    [[ -z ${input_version_array[i]} ]] && input_version_array[i]=0
+
+    if (( input_version_array[i] > api_change_version_array[i] )); then
+      # input version is higher
+      return 0
+    elif (( input_version_array[i] < api_change_version_array[i] )); then
+      # input version is lower
+      return 1
+    fi
+    # else next loop
+  done
+
+  # versions are equal
+  return 0
+}
+
 # calling a script to list all elixir releases
 # reject releases before 1.0.0 (starting with 0)
 # reject main and master branches
@@ -9,18 +33,16 @@
 # finally take last one
 ASDF_ELIXIR_LATEST_VERSION=$(./list-all | tr " " "\n" | grep -Ev "^0|^main|^master|otp|rc|^$" | tail -n 1)
 
-ASDF_VERSION="$(asdf version)"
-# gets current erlang version without headers
-# changes spaces to new line
-# takes second line (Name Version Source Installed)
-if printf "0.16.0\n%s\n" "${ASDF_VERSION#v}" | sort -CV; then
+# support for v-dev and different asdf API versions
+ASDF_ELIXIR_ASDF_VERSION="$(asdf version)"
+if [ "$ASDF_ELIXIR_ASDF_VERSION" = "v-dev" ] || version_gte_api_change "${ASDF_ELIXIR_ASDF_VERSION#v}"; then
   # use --no-header flag only in latest asdf API (go builds)
-  ASDF_ELIXIR_LATEST_OTP=$(asdf current --no-header erlang | tr -s " ." "\n" | sed -n 2p)
+  ASDF_ELIXIR_LATEST_OTP=$(asdf current --no-header erlang)
 else
-  ASDF_ELIXIR_LATEST_OTP=$(asdf current erlang | tr -s " ." "\n" | sed -n 2p)
+  ASDF_ELIXIR_LATEST_OTP=$(asdf current erlang)
 fi
 
 # Note: asdf latest does not allows latest stable version to start with number
 #       therefore installing from source by git ref is not supported, see:
 #       https://github.com/asdf-vm/asdf/blob/v0.16.5/internal/versions/versions.go#L276
-echo "$ASDF_ELIXIR_LATEST_VERSION-otp-$ASDF_ELIXIR_LATEST_OTP"
+printf "$ASDF_ELIXIR_LATEST_VERSION-otp-%s\n" `printf "$ASDF_ELIXIR_LATEST_OTP" | tr -s " ." "\n" | sed -n 2p`
