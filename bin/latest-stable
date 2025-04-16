@@ -1,7 +1,31 @@
 #!/usr/bin/env bash
 
+version_gte_api_change() {
+  # Split the versions by dot character into arrays
+  IFS='.' read -r -a input_version_array <<<"$1"
+  IFS='.' read -r -a api_change_version_array <<<"0.16.0"
+
+  # Support for 3 numbers in semantic versioning
+  for i in {0..2}; do
+    # suport for shorter versions by padding with 0
+    [[ -z ${input_version_array[i]} ]] && input_version_array[i]=0
+
+    if ((input_version_array[i] > api_change_version_array[i])); then
+      # input version is higher
+      return 0
+    elif ((input_version_array[i] < api_change_version_array[i])); then
+      # input version is lower
+      return 1
+    fi
+    # else next loop
+  done
+
+  # versions are equal
+  return 0
+}
+
 # get the directory of the current script
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ASDF_ELIXIR_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # calling a script to list all elixir releases
 # reject releases before 1.0.0 (starting with 0)
@@ -10,14 +34,18 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # reject release candidates
 # reject empty line
 # finally take last one
-ASDF_ELIXIR_LATEST_VERSION=$("$SCRIPT_DIR"/list-all | tr " " "\n" | grep -Ev "^0|^main|^master|otp|rc|^$" | tail -n 1)
+ASDF_ELIXIR_LATEST_VERSION=$("$ASDF_ELIXIR_SCRIPT_DIR"/list-all | tr " " "\n" | grep -Ev "^0|^main|^master|otp|rc|^$" | tail -n 1)
 
-# gets current erlang version without headers
-# changes spaces to new line
-# takes second line (Name Version Source Installed)
-ASDF_ELIXIR_LATEST_OTP=$(asdf current --no-header erlang | tr -s " ." "\n" | sed -n 2p)
+# support for v-dev and different asdf API versions
+ASDF_ELIXIR_ASDF_VERSION="$(asdf version)"
+if [ "$ASDF_ELIXIR_ASDF_VERSION" = "v-dev" ] || version_gte_api_change "${ASDF_ELIXIR_ASDF_VERSION#v}"; then
+  # use --no-header flag only in latest asdf API (go builds)
+  ASDF_ELIXIR_LATEST_OTP=$(asdf current --no-header erlang)
+else
+  ASDF_ELIXIR_LATEST_OTP=$(asdf current erlang)
+fi
 
 # Note: asdf latest does not allows latest stable version to start with number
 #       therefore installing from source by git ref is not supported, see:
 #       https://github.com/asdf-vm/asdf/blob/v0.16.5/internal/versions/versions.go#L276
-echo "$ASDF_ELIXIR_LATEST_VERSION-otp-$ASDF_ELIXIR_LATEST_OTP"
+printf "%s-otp-%s\n" "$ASDF_ELIXIR_LATEST_VERSION" "$(printf "%s" "$ASDF_ELIXIR_LATEST_OTP" | tr -s " ." "\n" | sed -n 2p)"
