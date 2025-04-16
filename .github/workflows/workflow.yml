@@ -29,7 +29,7 @@ jobs:
     steps:
       - name: Install system packages on Ubuntu
         if: ${{ runner.os == 'Linux' }}
-        run: sudo apt-get install curl erlang
+        run: sudo apt-get update && sudo apt-get install curl erlang
 
       - name: Install system packages on macOS
         if: ${{ runner.os == 'macOS' }}
