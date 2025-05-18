@@ -43,10 +43,21 @@ Be sure to also install the corresponding Erlang/OTP version with asdf-erlang, a
 
 You can download and compile a specific commit reference from the [Elixir GitHub repository](https://github.com/elixir-lang/elixir/commits/main) by running: `asdf install elixir ref:<commit reference>`. You can then set the local/global version to your new version by running:
 
+```bash
+# install in the entire environment
+asdf set --home elixir ref-<commit/tag reference>
+
+# Or install locally in project
+asdf set elixir ref-<commit/tag reference>
 ```
-asdf local elixir ref:<commit reference>
-# Or
-asdf global elixir ref:<commit reference>
+
+**or asdf < 0.16.0**
+```bash
+# install in the entire environment
+asdf global elixir ref:<commit/tag reference>
+
+# Or install locally in project
+asdf local elixir ref:<commit/tag reference>
 ```
 
 You can also [compile Elixir from source](https://github.com/elixir-lang/elixir/tree/master#compiling-from-source) without using `asdf` (for example, so that you can use the `master` branch of elixir or a branch with your own modifications), then use it by specifying the directory path:
