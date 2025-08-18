@@ -94,7 +94,7 @@ Hex.pm returned a ${http_status} for the following URL:
 
 ${download_url}
 
-You can view a list of all Elixir releases by running 'asdf list-all elixir'.
+You can view a list of all Elixir releases by running 'asdf list all elixir'.
 
 Note: If you want to download a specific release of Elixir, please
 specify the full version number (e.g. 1.2.1 instead of 1.3).
@@ -124,7 +124,7 @@ GitHub returned a 404 for the following URL:
 
 ${download_url}
 
-You can view a list of all Elixir releases by running 'asdf list-all elixir'
+You can view a list of all Elixir releases by running 'asdf list all elixir'
 or by visiting https://github.com/elixir-lang/elixir/releases
 
 Note: If you want to specify a git reference by which to install
