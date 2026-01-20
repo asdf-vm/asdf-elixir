@@ -208,4 +208,3 @@ run_default_mix_commands() {
 
 install_elixir "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
 run_default_mix_commands "$ASDF_INSTALL_PATH"
-
