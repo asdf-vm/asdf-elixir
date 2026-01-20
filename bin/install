@@ -29,6 +29,8 @@ install_elixir_version() {
   local install_path=$2
   local tmp_download_dir=$3
 
+  check_version_has_otp_version
+
   # path to the tar file
   local source_path="$tmp_download_dir/elixir-precompiled-${version}.zip"
   download_zip_file_for_version "$version" "$source_path"
@@ -157,16 +159,6 @@ get_download_url_for_version() {
 
     filename="elixir-otp-${otp_version}.zip"
   else
-    cat <<EOS
-==> Please specify an OTP version
-
-Precompiled versions of Elixir are specific to OTP versions. Please specify
-an OTP version (like `1.19.5-otp-28`) for the version of Elixir you would like
-to install.
-
-Note: You can see which version of OTP you'll likely need by checking your
-Erlang version (with `erlang --version` or `asdf list erlang`
-EOS
     exit 1
   fi
 
@@ -179,6 +171,25 @@ EOS
   # - https://github.com/elixir-lang/elixir/releases/tag/v1.14.0
   #
   echo "https://github.com/elixir-lang/elixir/releases/download/v${base_version}/${filename}"
+}
+
+check_version_has_otp_version() {
+  version=${version#v}
+
+  # Check if version is missing -otp-XX
+  if [[ ! "$version" =~ -otp-([0-9]+) ]]; then
+    cat <<EOS
+==> Please specify an OTP version
+
+Precompiled versions of Elixir are specific to OTP versions. Please specify
+an OTP version (like '1.19.5-otp-28') for the version of Elixir you would like
+to install.
+
+Note: You can see which version of OTP you'll likely need by checking your
+Erlang version (with 'erlang --version' or 'asdf list erlang'
+EOS
+    exit 1
+  fi
 }
 
 run_default_mix_commands() {
