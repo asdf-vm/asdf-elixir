@@ -140,13 +140,45 @@ EOS
 
 get_download_url_for_version() {
   local version=$1
+  local base_version
+  local filename
+  local otp_version
 
-  # if version is a release number, prepend v
-  if [[ "$version" =~ ^[0-9]+\.* ]]; then
-    version="v${version}"
+  # Remove 'v' prefix if present
+  version=${version#v}
+
+  # Check if version contains -otp-XX anywhere
+  if [[ "$version" =~ -otp-([0-9]+) ]]; then
+    # Extract OTP version
+    otp_version="${BASH_REMATCH[1]}"
+
+    # Extract base version (everything before -otp-XX)
+    base_version="${version%-otp-*}"
+
+    filename="elixir-otp-${otp_version}.zip"
+  else
+    cat <<EOS
+==> Please specify an OTP version
+
+Precompiled versions of Elixir are specific to OTP versions. Please specify
+an OTP version (like `1.19.5-otp-28`) for the version of Elixir you would like
+to install.
+
+Note: You can see which version of OTP you'll likely need by checking your
+Erlang version (with `erlang --version` or `asdf list erlang`
+EOS
+    exit 1
   fi
 
-  echo "https://builds.hex.pm/builds/elixir/${version}.zip"
+  # NOTE:
+  # This URL works as far back as `1.14.0`. Before that, downloads should be
+  # "https://github.com/elixir-lang/elixir/releases/download/v${base_version}/Precompiled.zip"
+  #
+  # You can check this by looking at the downloads for the releases:
+  # - https://github.com/elixir-lang/elixir/releases/tag/v1.13.4
+  # - https://github.com/elixir-lang/elixir/releases/tag/v1.14.0
+  #
+  echo "https://github.com/elixir-lang/elixir/releases/download/v${base_version}/${filename}"
 }
 
 run_default_mix_commands() {
@@ -165,3 +197,4 @@ run_default_mix_commands() {
 
 install_elixir "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
 run_default_mix_commands "$ASDF_INSTALL_PATH"
+
