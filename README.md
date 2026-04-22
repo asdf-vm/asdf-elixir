@@ -54,19 +54,18 @@ asdf set elixir ref-<commit/tag reference>
 **or asdf < 0.16.0**
 ```bash
 # install in the entire environment
-asdf global elixir ref:<commit/tag reference>
-
+asdf set --home elixir ref:<commit/tag reference>
 # Or install locally in project
-asdf local elixir ref:<commit/tag reference>
+asdf set elixir ref:<commit/tag reference>
 ```
 
 You can also [compile Elixir from source](https://github.com/elixir-lang/elixir/tree/master#compiling-from-source) without using `asdf` (for example, so that you can use the `master` branch of elixir or a branch with your own modifications), then use it by specifying the directory path:
 
 ```
 # After Elixir already installed into /path/to/elixir
-asdf local elixir path:/path/to/elixir
+asdf set elixir path:/path/to/elixir
 # Or
-asdf global elixir path:/path/to/elixir
+asdf set --home elixir path:/path/to/elixir
 ```
 
 
